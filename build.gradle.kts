@@ -13,5 +13,5 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
 }
 tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "13"
 }
