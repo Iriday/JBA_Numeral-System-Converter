@@ -5,7 +5,10 @@ import java.math.BigInteger
 import java.math.RoundingMode
 
 fun main() {
-    print(decimalTo(readNum(), readNum().toInt()))
+    val prefixes = mapOf(Pair(2, "0b"), Pair(8, "0"), Pair(16, "0x"))
+    val num = readNum()
+    val base = readNum().toInt()
+    print(addPrefix(decimalTo(num, base), base, prefixes))
 }
 
 fun decimalTo(decimal: BigInteger, base: Int): String {
@@ -21,6 +24,10 @@ fun decimalTo(decimal: BigInteger, base: Int): String {
 
         if (left == BigDecimal.ZERO) return sb.reverse().toString()
     }
+}
+
+fun addPrefix(num: String, base: Int, prefixes: Map<Int, String>, defaultPrefix: String = ""): String {
+    return prefixes.getOrDefault(base, defaultPrefix) + num
 }
 
 fun readNum() = readLine()!!.toBigInteger()
