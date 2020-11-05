@@ -6,8 +6,12 @@ import java.math.BigInteger
 
 class TestTopLvlFunctions {
     val two = 2
-    val eight = 8
     val six = 6
+    val eight = 8
+    val sixteen = 16
+    val twentyOne = 21
+    val twentySeven = 27
+    val thirtySix = 36
 
     @Test
     fun testDecimalTo() {
@@ -48,6 +52,18 @@ class TestTopLvlFunctions {
         assertEquals(decimalTo(bi(1234999992996), eight), 1234999992996L.toString(eight))
         assertEquals(decimalTo(bi("312349999999123499991933"), eight), bi("312349999999123499991933").toString(eight))
         testRange(0..99999L, 1, eight)
+
+        // base 16
+        testRange(0..10999L, 1, sixteen)
+
+        // base 21
+        testRange(0..99991L, 1, twentyOne)
+
+        // base 27
+        testRange(0..123749L, 1, twentySeven)
+
+        // base 36
+        testRange(0..999999L, 3, thirtySix)
     }
 
     fun bi(num: Long): BigInteger {
