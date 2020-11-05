@@ -5,7 +5,7 @@ import java.math.BigInteger
 import java.math.RoundingMode
 
 fun main() {
-    print(decimalTo(readNum(), 2))
+    print(decimalTo(readNum(), readNum().toInt()))
 }
 
 fun decimalTo(decimal: BigInteger, base: Int): String {
@@ -14,10 +14,10 @@ fun decimalTo(decimal: BigInteger, base: Int): String {
     var left = decimal.toBigDecimal()
 
     while (true) {
-        val numStr = (left.divide(b,10, RoundingMode.UP)).toPlainString()
+        val numStr = (left.divide(b, 10, RoundingMode.UP)).toPlainString()
         left = numStr.substringBefore('.').toBigDecimal()
-        val right = numStr.substring(numStr.indexOf('.')).toBigDecimal() * b
-        sb.append(right.toInt())
+        val right = (numStr.substring(numStr.indexOf('.')).toBigDecimal() * b).toInt()
+        sb.append(if (right < 10) right else 'a' - 10 + right)
 
         if (left == BigDecimal.ZERO) return sb.reverse().toString()
     }
