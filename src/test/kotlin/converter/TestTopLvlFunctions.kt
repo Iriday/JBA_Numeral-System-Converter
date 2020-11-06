@@ -6,11 +6,14 @@ import java.math.BigInteger
 
 class TestTopLvlFunctions {
     val two = 2
+    val four = 4
     val six = 6
     val eight = 8
+    val ten = 10
     val sixteen = 16
     val twentyOne = 21
     val twentySeven = 27
+    val thirtyThree = 33
     val thirtySix = 36
 
     @Test
@@ -53,6 +56,10 @@ class TestTopLvlFunctions {
         assertEquals(decimalTo(bi("312349999999123499991933"), eight), bi("312349999999123499991933").toString(eight))
         testRange(0..99999L, 1, eight)
 
+        // base 10
+        testRange(0..9999L, 1, ten)
+        testRange(99..99923478923947899L, 1149782343298, ten)
+
         // base 16
         testRange(0..10999L, 1, sixteen)
 
@@ -65,6 +72,39 @@ class TestTopLvlFunctions {
         // base 36
         testRange(0..999999L, 3, thirtySix)
     }
+
+
+    @Test
+    fun testToDecimal() {
+        fun testRange(range: LongRange, step: Long, base: Int) {
+            for (i in range step step) {
+                assertEquals(toDecimal(i.toString(base), base), bi(i))
+            }
+        }
+
+        // base 2
+        assertEquals(toDecimal("101", two), BigInteger.valueOf(5))
+        testRange(0..999L, 1, two)
+
+        // base 4
+        testRange(0..999999L, 9, four)
+
+        // base 8
+        testRange(0..2798943L, 17, eight)
+
+        // base 10
+        testRange(0..10000L, 8, ten)
+
+        // base 16
+        testRange(0..923479234234L, 999999, sixteen)
+
+        // base 33
+        testRange(0..234978923L, 189382, thirtyThree)
+
+        // base 36
+        testRange(0..87342L, 1, thirtySix)
+    }
+
 
     fun bi(num: Long): BigInteger {
         return num.toBigInteger()
