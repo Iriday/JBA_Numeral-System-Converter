@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import java.math.BigInteger
 
 class TestTopLvlFunctions {
+    val one = 1
     val two = 2
     val four = 4
     val six = 6
@@ -23,6 +24,14 @@ class TestTopLvlFunctions {
                 assertEquals(decimalTo(bi(i), base), i.toString(base))
             }
         }
+
+        fun testBaseOne(range: IntRange, step: Int) {
+            for (i in range step step)
+                assertEquals(decimalTo(bi(i.toString()), one), "1".repeat(i))
+        }
+
+        // base 1
+        testBaseOne(0..9999, 1)
 
         // base 2
         assertEquals(decimalTo(bi(0), two), "0")
@@ -81,6 +90,15 @@ class TestTopLvlFunctions {
                 assertEquals(toDecimal(i.toString(base), base), bi(i))
             }
         }
+
+        fun testBaseOne(range: IntRange, step: Int) {
+            for (i in range step step) {
+                assertEquals(toDecimal("1".repeat(i), one), bi(i.toString()))
+            }
+        }
+
+        // base 1
+        testBaseOne(0..9999, 99)
 
         // base 2
         assertEquals(toDecimal("101", two), BigInteger.valueOf(5))
