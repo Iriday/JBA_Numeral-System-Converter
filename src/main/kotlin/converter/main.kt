@@ -18,6 +18,15 @@ fun run() {
 }
 
 fun decimalTo(decimal: BigInteger, base: Int): String {
+    if (base == 1) {
+        val sb = StringBuilder()
+        var decimalTemp = decimal
+        while (decimalTemp != BigInteger.ZERO) {
+            sb.append("1")
+            decimalTemp--
+        }
+        return sb.toString()
+    }
     val b = base.toBigDecimal()
     val sb = StringBuilder()
     var left = decimal.toBigDecimal()
