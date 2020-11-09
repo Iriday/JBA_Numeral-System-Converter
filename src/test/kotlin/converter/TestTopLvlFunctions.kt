@@ -19,50 +19,51 @@ class TestTopLvlFunctions {
 
     @Test
     fun testDecimalTo() {
+        // test integer
         fun testRange(range: LongRange, step: Long, base: Int) {
             for (i in range step step) {
-                assertEquals(decimalTo(bi(i), base), i.toString(base))
+                assertEquals(decimalTo(i.toString(), base), i.toString(base))
             }
         }
 
         fun testBaseOne(range: IntRange, step: Int) {
             for (i in range step step)
-                assertEquals(decimalTo(bi(i.toString()), one), "1".repeat(i))
+                assertEquals(decimalTo(i.toString(), one), "1".repeat(i))
         }
 
         // base 1
         testBaseOne(0..9999, 1)
 
         // base 2
-        assertEquals(decimalTo(bi(0), two), "0")
-        assertEquals(decimalTo(bi(7), two), "111")
-        assertEquals(decimalTo(bi(17), two), "10001")
-        assertEquals(decimalTo(bi(9999999), two), 9999999L.toString(two))
-        assertEquals(decimalTo(bi(999999119), two), 999999119L.toString(two))
-        assertEquals(decimalTo(bi(12349999999), two), 12349999999L.toString(two))
-        assertEquals(decimalTo(bi("1234999999912349999999"), two), bi("1234999999912349999999").toString(two))
+        assertEquals(decimalTo("0", two), "0")
+        assertEquals(decimalTo("7", two), "111")
+        assertEquals(decimalTo("17", two), "10001")
+        assertEquals(decimalTo("9999999", two), 9999999L.toString(two))
+        assertEquals(decimalTo("999999119", two), 999999119L.toString(two))
+        assertEquals(decimalTo("12349999999", two), 12349999999L.toString(two))
+        assertEquals(decimalTo("1234999999912349999999", two), bi("1234999999912349999999").toString(two))
         testRange(0..10000L, 9, two)
 
         // base 6
-        assertEquals(decimalTo(bi(0), six), "0")
-        assertEquals(decimalTo(bi(5), six), "5")
-        assertEquals(decimalTo(bi(6), six), "10")
-        assertEquals(decimalTo(bi(17), six), 17L.toString(six))
-        assertEquals(decimalTo(bi(99929999), six), 99929999L.toString(six))
-        assertEquals(decimalTo(bi(19999119), six), 19999119L.toString(six))
-        assertEquals(decimalTo(bi(123499999299), six), 123499999299L.toString(six))
-        assertEquals(decimalTo(bi("3123499999991234999919"), six), bi("3123499999991234999919").toString(six))
+        assertEquals(decimalTo("0", six), "0")
+        assertEquals(decimalTo("5", six), "5")
+        assertEquals(decimalTo("6", six), "10")
+        assertEquals(decimalTo("17", six), 17L.toString(six))
+        assertEquals(decimalTo("99929999", six), 99929999L.toString(six))
+        assertEquals(decimalTo("19999119", six), 19999119L.toString(six))
+        assertEquals(decimalTo("123499999299", six), 123499999299L.toString(six))
+        assertEquals(decimalTo("3123499999991234999919", six), bi("3123499999991234999919").toString(six))
         testRange(0..10000L, 6, six)
 
         // base 8
-        assertEquals(decimalTo(bi(0), eight), "0")
-        assertEquals(decimalTo(bi(7), eight), "7")
-        assertEquals(decimalTo(bi(8), eight), "10")
-        assertEquals(decimalTo(bi(63), eight), "77")
-        assertEquals(decimalTo(bi(64), eight), "100")
-        assertEquals(decimalTo(bi(65), eight), "101")
-        assertEquals(decimalTo(bi(1234999992996), eight), 1234999992996L.toString(eight))
-        assertEquals(decimalTo(bi("312349999999123499991933"), eight), bi("312349999999123499991933").toString(eight))
+        assertEquals(decimalTo("0", eight), "0")
+        assertEquals(decimalTo("7", eight), "7")
+        assertEquals(decimalTo("8", eight), "10")
+        assertEquals(decimalTo("63", eight), "77")
+        assertEquals(decimalTo("64", eight), "100")
+        assertEquals(decimalTo("65", eight), "101")
+        assertEquals(decimalTo("1234999992996", eight), 1234999992996L.toString(eight))
+        assertEquals(decimalTo("312349999999123499991933", eight), bi("312349999999123499991933").toString(eight))
         testRange(0..99999L, 1, eight)
 
         // base 10
@@ -80,20 +81,31 @@ class TestTopLvlFunctions {
 
         // base 36
         testRange(0..999999L, 3, thirtySix)
+
+        // test fraction
+
+        // base 1
+        assertEquals(decimalTo("11.33333", one), "11111111111")
+
+        // base 10
+        assertEquals(decimalTo("0.3333399", ten, 10, fractionLen = 5), "0.33333") // no rounding!
+        assertEquals(decimalTo("0.3333399", ten,  fractionLen = 3), "0.333")
+        assertEquals(decimalTo("999.3333399", ten,  fractionLen = 7), "999.3333399")
     }
 
 
     @Test
     fun testToDecimal() {
+        // test integer
         fun testRange(range: LongRange, step: Long, base: Int) {
             for (i in range step step) {
-                assertEquals(toDecimal(i.toString(base), base), bi(i))
+                assertEquals(toDecimal(i.toString(base), base), i.toString())
             }
         }
 
         fun testBaseOne(range: IntRange, step: Int) {
             for (i in range step step) {
-                assertEquals(toDecimal("1".repeat(i), one), bi(i.toString()))
+                assertEquals(toDecimal("1".repeat(i), one), i.toString())
             }
         }
 
@@ -101,7 +113,7 @@ class TestTopLvlFunctions {
         testBaseOne(0..9999, 99)
 
         // base 2
-        assertEquals(toDecimal("101", two), BigInteger.valueOf(5))
+        assertEquals(toDecimal("101", two), "5")
         testRange(0..999L, 1, two)
 
         // base 4
@@ -121,6 +133,11 @@ class TestTopLvlFunctions {
 
         // base 36
         testRange(0..87342L, 1, thirtySix)
+
+        // test fraction
+
+        // base 10
+        assertEquals(toDecimal("392.999349", ten, scale = 6), "392.999349")
     }
 
 
