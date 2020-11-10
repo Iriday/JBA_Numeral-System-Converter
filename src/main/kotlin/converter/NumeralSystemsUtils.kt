@@ -62,11 +62,11 @@ fun decimalTo(decimal: String, base: Int, scale: Int = 16, fractionLen: Int = 16
 fun toDecimal(number: String, base: Int, scale: Int = 16): String {
 
     fun convertIntegerPart(integer: String, base: Int): BigDecimal {
-        val baseDouble = base.toDouble()
+        val baseBigDec = base.toBigDecimal()
         var decimal = BigDecimal.ZERO
 
         for ((i, num) in integer.withIndex()) {
-            decimal += (baseDouble.pow(integer.length - 1 - i) * charToNum(num)).toBigDecimal()
+            decimal += baseBigDec.pow(integer.length - 1 - i) * charToNum(num).toBigDecimal()
         }
         return decimal
     }
