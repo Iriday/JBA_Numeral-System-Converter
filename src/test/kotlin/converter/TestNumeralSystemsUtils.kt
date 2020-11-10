@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.math.BigInteger
 
-class TestTopLvlFunctions {
+class TestNumeralSystemsUtils {
     val one = 1
     val two = 2
     val four = 4
