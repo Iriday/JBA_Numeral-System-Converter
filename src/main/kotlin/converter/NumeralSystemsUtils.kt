@@ -2,13 +2,17 @@ package converter
 
 import java.math.BigDecimal
 import java.math.RoundingMode
-import kotlin.math.pow
 
+// Model
 fun convert(srcBase: Int, number: String, trgBase: Int, scale: Int = 16, fractionLen: Int = 16): String {
     return decimalTo(toDecimal(number, srcBase, scale), trgBase, scale, fractionLen)
 }
 
 fun decimalTo(decimal: String, base: Int, scale: Int = 16, fractionLen: Int = 16): String {
+    throwIfIncorrectBase(base)
+    throwIfIncorrectNumber(decimal, 10)
+    throwIfIncorrectScale(scale)
+    throwIfIncorrectFractionLen(scale, fractionLen)
 
     fun decimalToBaseOne(decimal: String): String {
         val sb = StringBuilder()
@@ -60,6 +64,9 @@ fun decimalTo(decimal: String, base: Int, scale: Int = 16, fractionLen: Int = 16
 }
 
 fun toDecimal(number: String, base: Int, scale: Int = 16): String {
+    throwIfIncorrectBase(base)
+    throwIfIncorrectNumber(number, base)
+    throwIfIncorrectScale(scale)
 
     fun convertIntegerPart(integer: String, base: Int): BigDecimal {
         val baseBigDec = base.toBigDecimal()
@@ -91,8 +98,36 @@ fun toDecimal(number: String, base: Int, scale: Int = 16): String {
 private val prefixes = mapOf(Pair(2, "0b"), Pair(8, "0"), Pair(16, "0x"))
 fun addPrefix(num: String, base: Int, defaultPrefix: String = "") = prefixes.getOrDefault(base, defaultPrefix) + num
 
+fun isNumberCorrect(number: String, base: Int): Boolean {
+    val regexPart = when (base) {
+        1 -> "[1]*"
+        in 2..10 -> "[0-${base - 1}]+"
+        in 11..36 -> "[0-9a-${'a' - 11 + base}]+"
+        else -> throw IllegalArgumentException("Error: incorrect base \"$base\".")
+    }
+    return number.matches(Regex("($regexPart)?[.]?$regexPart"))
+}
+
 private fun splitNum(number: String) = Pair(number.substringBefore('.'), number.substring(number.indexOf('.')))
 
 private fun charToNum(c: Char) = c.toString().toIntOrNull() ?: c - 'a' + 10
 
 private fun numToChar(n: Int) = if (n < 10) n else 'a' - 10 + n
+
+// exceptions
+private fun throwIfIncorrectBase(base: Int) {
+    if (base !in 1..36) throw IllegalArgumentException("Error: incorrect base \"$base\".")
+}
+
+private fun throwIfIncorrectNumber(number: String, base: Int) {
+    if (!isNumberCorrect(number, base)) throw IllegalArgumentException("Error: incorrect number \"$number\".")
+}
+
+private fun throwIfIncorrectScale(scale: Int) {
+    if (scale < 1) throw IllegalArgumentException("Error: scale must be >= 1")
+}
+
+private fun throwIfIncorrectFractionLen(scale: Int, fractionLen: Int) {
+    if (fractionLen < 0) throw IllegalArgumentException("Error: fractionLen should be >= 0.")
+    if (fractionLen > scale) throw IllegalArgumentException("Error: fractionLen should be <= scale.")
+}
