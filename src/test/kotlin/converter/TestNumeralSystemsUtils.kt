@@ -1,10 +1,15 @@
 package converter
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.function.Executable
+import java.lang.IllegalArgumentException
 import java.math.BigInteger
 
 class TestNumeralSystemsUtils {
+    val illegalArgExcep = IllegalArgumentException().javaClass
+
     val one = 1
     val two = 2
     val four = 4
@@ -119,6 +124,17 @@ class TestNumeralSystemsUtils {
         assertEquals(decimalTo("0.3333399", ten, 10, fractionLen = 5), "0.33333") // no rounding!
         assertEquals(decimalTo("0.3333399", ten, fractionLen = 3), "0.333")
         assertEquals(decimalTo("999.3333399", ten, fractionLen = 7), "999.3333399")
+
+        // tests exceptions
+        assertThrows(illegalArgExcep) { decimalTo("", 11) }
+        assertThrows(illegalArgExcep) { decimalTo("!@#", 11) }
+        assertThrows(illegalArgExcep) { decimalTo("2..2", thirtySix) }
+        assertThrows(illegalArgExcep) { decimalTo(".2.2", six) }
+        assertThrows(illegalArgExcep) { decimalTo("2.2.", eight) }
+        assertThrows(illegalArgExcep) { decimalTo("a", 11) }
+        assertThrows(illegalArgExcep) { decimalTo("z", 11) }
+        assertThrows(illegalArgExcep) { decimalTo("111a", ten) }
+        assertThrows(illegalArgExcep) { decimalTo("1.a", thirtySix) }
     }
 
 
@@ -194,6 +210,20 @@ class TestNumeralSystemsUtils {
 
         // base 10
         assertEquals(toDecimal("392.999349", ten, scale = 6), "392.999349")
+
+        // test exceptions
+        assertThrows(illegalArgExcep) { toDecimal("", six) }
+        assertThrows(illegalArgExcep) { toDecimal("!@#", ten) }
+        assertThrows(illegalArgExcep) { toDecimal("2..2", thirtySix) }
+        assertThrows(illegalArgExcep) { toDecimal(".2.2", six) }
+        assertThrows(illegalArgExcep) { toDecimal("2.2.", eight) }
+        assertThrows(illegalArgExcep) { toDecimal("1", 0) }
+        assertThrows(illegalArgExcep) { toDecimal("1", 37) }
+        assertThrows(illegalArgExcep) { toDecimal("1", -99) }
+        assertThrows(illegalArgExcep) { toDecimal("1", 99) }
+        assertThrows(illegalArgExcep) { toDecimal("b", 11) }
+        assertThrows(illegalArgExcep) { toDecimal("f", 15) }
+        assertThrows(illegalArgExcep) { toDecimal("z", 35) }
     }
 
 
